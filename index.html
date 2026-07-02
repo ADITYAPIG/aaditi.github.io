@@ -40,7 +40,6 @@
     text-align: center;
   }
 
-  /* Floating ambient hearts */
   .heart{
     position: absolute;
     bottom: -10vh;
@@ -64,7 +63,7 @@
     color: var(--cream);
     font-size: clamp(2.4rem, 8vw, 5rem);
     text-shadow: 0 0 30px rgba(255, 111, 156, 0.45);
-    margin: 0 0 3rem 0;
+    margin: 0 0 1.5rem 0;
     padding: 0 1rem;
     z-index: 2;
     animation: gentlePulse 3.5s ease-in-out infinite;
@@ -75,11 +74,44 @@
     50% { transform: scale(1.03); }
   }
 
+  .tease-text{
+    position: fixed;
+    top: 22%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.1rem, 3.5vw, 1.7rem);
+    color: var(--plum-deep);
+    background: linear-gradient(135deg, var(--cream), var(--pink-soft));
+    padding: 0.7rem 1.6rem;
+    border-radius: 999px;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.35);
+    opacity: 0;
+    z-index: 5;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .tease-text.show{
+    animation: popIn 0.5s ease forwards;
+  }
+
+  @keyframes popIn{
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+    15%  { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+    25%  { transform: translate(-50%, -50%) scale(1); }
+    80%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+  }
+
   .btn-row{
     position: relative;
-    width: 100%;
-    height: 40vh;
     z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
   }
 
   button{
@@ -92,7 +124,6 @@
   }
 
   #yesBtn{
-    position: relative;
     background: linear-gradient(135deg, var(--gold), var(--pink-glow));
     color: var(--plum-deep);
     padding: 1rem 2.6rem;
@@ -106,22 +137,36 @@
   }
 
   #noBtn{
-    position: absolute;
     background: transparent;
     color: var(--pink-soft);
     border: 2px solid var(--pink-soft);
-    padding: 0.9rem 2.2rem;
-    font-size: 1.2rem;
-    top: 55%;
-    left: 50%;
-    transform: translate(calc(-50% - 90px), -50%);
+    padding: 1rem 2.2rem;
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
   }
 
-  .center-row{
-    display:flex;
-    gap: 90px;
-    align-items:center;
-    justify-content:center;
+  .final-line{
+    position: fixed;
+    top: 32%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Dancing Script', cursive;
+    color: var(--gold);
+    font-size: clamp(1.3rem, 4vw, 2rem);
+    opacity: 0;
+    z-index: 5;
+    pointer-events: none;
+    text-shadow: 0 0 20px rgba(255,200,87,0.5);
+  }
+
+  .final-line.show{
+    animation: fadeHold 3s ease forwards;
+  }
+
+  @keyframes fadeHold{
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    15%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    85%  { opacity: 1; }
+    100% { opacity: 0; }
   }
 
   .celebration{
@@ -170,22 +215,18 @@
     .heart{ animation: none; opacity: 0; }
     .question{ animation: none; }
   }
-
-  @media (max-width: 480px){
-    .center-row{ gap: 0; }
-    #noBtn{ top: 60%; }
-  }
 </style>
 </head>
 <body>
 
 <div class="stage" id="stage">
-  <h1 class="question">Do you love me?</h1>
+  <h1 class="question">Do you love me? 🥰</h1>
+
+  <div class="tease-text" id="teaseText"></div>
+  <div class="final-line" id="finalLine">Only YES is left now 😌💛</div>
 
   <div class="btn-row">
-    <div class="center-row">
-      <button id="yesBtn" onclick="sayYes()">YES</button>
-    </div>
+    <button id="yesBtn" onclick="sayYes()">YES 💛</button>
     <button id="noBtn" onclick="dodgeNo()">NO</button>
   </div>
 </div>
@@ -196,7 +237,6 @@
 </div>
 
 <script>
-  // ---- Ambient floating hearts ----
   const stage = document.getElementById('stage');
   const heartSymbols = ['♥','❤','💕'];
   for(let i=0;i<18;i++){
@@ -211,57 +251,72 @@
     stage.appendChild(h);
   }
 
-  // ---- NO button dodges, YES grows ----
-  const noBtn = document.getElementById('yesBtn') ? document.getElementById('noBtn') : null;
   const yesBtn = document.getElementById('yesBtn');
+  const noBtn = document.getElementById('noBtn');
+  const teaseText = document.getElementById('teaseText');
+  const finalLine = document.getElementById('finalLine');
+
+  const messages = [
+    "Stop lying 😭",
+    "Seriously?! 🙄",
+    "Don't do this 🥺",
+    "Still no?! 😤",
+    "You're so bad 💔",
+    "Have some pity on me… 🥹"
+  ];
+
   let dodgeCount = 0;
   const maxDodges = 6;
-  let yesScale = 1;
 
   function dodgeNo(){
+    if(dodgeCount >= maxDodges) return;
     dodgeCount++;
 
-    // Shrink NO a bit each time
+    // Show the callout text
+    teaseText.textContent = messages[dodgeCount - 1];
+    teaseText.classList.remove('show');
+    void teaseText.offsetWidth; // restart animation
+    teaseText.classList.add('show');
+
+    // Switch NO to free-roaming positioning on its first click
+    if(dodgeCount === 1){
+      const rect = noBtn.getBoundingClientRect();
+      noBtn.style.position = 'fixed';
+      noBtn.style.left = rect.left + 'px';
+      noBtn.style.top = rect.top + 'px';
+      noBtn.style.margin = '0';
+    }
+
     const scale = Math.max(1 - dodgeCount * 0.13, 0.15);
-    document.getElementById('noBtn').style.transform =
-      `translate(${randomOffset()}px, ${randomOffset()}px) scale(${scale})`;
+    const btnW = noBtn.offsetWidth || 120;
+    const btnH = noBtn.offsetHeight || 50;
+    const padding = 24;
+    const maxX = window.innerWidth - btnW - padding;
+    const maxY = window.innerHeight - btnH - padding;
+    const newX = padding + Math.random() * Math.max(maxX - padding, 0);
+    const newY = padding + Math.random() * Math.max(maxY - padding, 0);
 
-    // Move NO to a random position within the stage
-    const stageRect = stage.getBoundingClientRect();
-    const btn = document.getElementById('noBtn');
-    const btnW = btn.offsetWidth || 120;
-    const btnH = btn.offsetHeight || 50;
-    const padding = 20;
+    noBtn.style.transition = 'left 0.35s ease, top 0.35s ease, transform 0.35s ease, opacity 0.5s ease';
+    noBtn.style.left = newX + 'px';
+    noBtn.style.top = newY + 'px';
+    noBtn.style.transform = `scale(${scale})`;
 
-    const maxX = stageRect.width - btnW - padding;
-    const maxY = stageRect.height - btnH - padding;
-    const newX = padding + Math.random() * maxX;
-    const newY = padding + Math.random() * maxY;
-
-    btn.style.position = 'fixed';
-    btn.style.left = newX + 'px';
-    btn.style.top = newY + 'px';
-    btn.style.transform = `scale(${scale})`;
-
-    // Grow YES a little each dodge
-    yesScale = Math.min(1 + dodgeCount * 0.14, 2.4);
+    const yesScale = Math.min(1 + dodgeCount * 0.14, 2.4);
+    yesBtn.style.transition = 'transform 0.35s ease';
     yesBtn.style.transform = `scale(${yesScale})`;
 
-    // After enough dodges, NO fades away entirely
     if(dodgeCount >= maxDodges){
-      btn.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-      btn.style.opacity = '0';
-      btn.style.pointerEvents = 'none';
+      noBtn.style.opacity = '0';
+      noBtn.style.pointerEvents = 'none';
+      setTimeout(()=>{
+        finalLine.classList.remove('show');
+        void finalLine.offsetWidth;
+        finalLine.classList.add('show');
+      }, 600);
     }
   }
 
-  function randomOffset(){
-    return Math.floor(Math.random()*40 - 20);
-  }
-
-  // ---- YES celebration ----
   function sayYes(){
-    // little emoji burst before transitioning
     for(let i=0;i<16;i++){
       const b = document.createElement('div');
       b.className = 'burst';
@@ -279,7 +334,7 @@
 
     setTimeout(()=>{
       document.getElementById('celebration').classList.add('show');
-      // When page 2 exists, replace the line below with:
+      // When page 2 exists, replace the line above's timeout body with:
       // window.location.href = "page2.html";
     }, 500);
   }
