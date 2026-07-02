@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Do you love me?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --plum-deep: #241329;
+    --plum-mid: #3a1f42;
+    --pink-glow: #ff6f9c;
+    --pink-soft: #ffb3c6;
+    --gold: #ffc857;
+    --cream: #fff3e8;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background: radial-gradient(circle at 50% 20%, var(--plum-mid) 0%, var(--plum-deep) 70%);
+    font-family: 'Quicksand', sans-serif;
+  }
+
+  .stage{
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* Floating ambient hearts */
+  .heart{
+    position: absolute;
+    bottom: -10vh;
+    color: var(--pink-glow);
+    opacity: 0.25;
+    animation: floatUp linear infinite;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  @keyframes floatUp{
+    0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+    10%  { opacity: 0.3; }
+    90%  { opacity: 0.2; }
+    100% { transform: translateY(-115vh) translateX(var(--drift, 20px)) rotate(360deg); opacity: 0; }
+  }
+
+  .question{
+    font-family: 'Dancing Script', cursive;
+    font-weight: 700;
+    color: var(--cream);
+    font-size: clamp(2.4rem, 8vw, 5rem);
+    text-shadow: 0 0 30px rgba(255, 111, 156, 0.45);
+    margin: 0 0 3rem 0;
+    padding: 0 1rem;
+    z-index: 2;
+    animation: gentlePulse 3.5s ease-in-out infinite;
+  }
+
+  @keyframes gentlePulse{
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+  }
+
+  .btn-row{
+    position: relative;
+    width: 100%;
+    height: 40vh;
+    z-index: 2;
+  }
+
+  button{
+    border: none;
+    border-radius: 999px;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  #yesBtn{
+    position: relative;
+    background: linear-gradient(135deg, var(--gold), var(--pink-glow));
+    color: var(--plum-deep);
+    padding: 1rem 2.6rem;
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+    box-shadow: 0 8px 25px rgba(255, 111, 156, 0.5);
+  }
+
+  #yesBtn:hover{
+    transform: scale(1.06);
+    box-shadow: 0 10px 32px rgba(255, 111, 156, 0.7);
+  }
+
+  #noBtn{
+    position: absolute;
+    background: transparent;
+    color: var(--pink-soft);
+    border: 2px solid var(--pink-soft);
+    padding: 0.9rem 2.2rem;
+    font-size: 1.2rem;
+    top: 55%;
+    left: 50%;
+    transform: translate(calc(-50% - 90px), -50%);
+  }
+
+  .center-row{
+    display:flex;
+    gap: 90px;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .celebration{
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    background: radial-gradient(circle at 50% 30%, var(--plum-mid), var(--plum-deep));
+    z-index: 10;
+  }
+
+  .celebration.show{ display: flex; }
+
+  .celebration h1{
+    font-family: 'Dancing Script', cursive;
+    color: var(--gold);
+    font-size: clamp(2.2rem, 7vw, 4.5rem);
+    text-shadow: 0 0 30px rgba(255, 200, 87, 0.5);
+    margin: 0 0 1rem 0;
+  }
+
+  .celebration p{
+    color: var(--cream);
+    font-size: 1.1rem;
+    opacity: 0.85;
+    max-width: 500px;
+    padding: 0 1.5rem;
+  }
+
+  .burst{
+    position: absolute;
+    font-size: 1.8rem;
+    animation: burstOut 1.4s ease-out forwards;
+    pointer-events: none;
+  }
+
+  @keyframes burstOut{
+    0%   { transform: translate(0,0) scale(0.6); opacity: 1; }
+    100% { transform: translate(var(--bx), var(--by)) scale(1.3); opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .heart{ animation: none; opacity: 0; }
+    .question{ animation: none; }
+  }
+
+  @media (max-width: 480px){
+    .center-row{ gap: 0; }
+    #noBtn{ top: 60%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+  <h1 class="question">Do you love me?</h1>
+
+  <div class="btn-row">
+    <div class="center-row">
+      <button id="yesBtn" onclick="sayYes()">YES</button>
+    </div>
+    <button id="noBtn" onclick="dodgeNo()">NO</button>
+  </div>
+</div>
+
+<div class="celebration" id="celebration">
+  <h1>She said YES! 🎉</h1>
+  <p>I knew it. Page 2 is coming soon — this is just where it'll take you next.</p>
+</div>
+
+<script>
+  // ---- Ambient floating hearts ----
+  const stage = document.getElementById('stage');
+  const heartSymbols = ['♥','❤','💕'];
+  for(let i=0;i<18;i++){
+    const h = document.createElement('div');
+    h.className = 'heart';
+    h.textContent = heartSymbols[Math.floor(Math.random()*heartSymbols.length)];
+    h.style.left = Math.random()*100 + 'vw';
+    h.style.fontSize = (14 + Math.random()*22) + 'px';
+    h.style.setProperty('--drift', (Math.random()*80 - 40) + 'px');
+    h.style.animationDuration = (8 + Math.random()*10) + 's';
+    h.style.animationDelay = (Math.random()*10) + 's';
+    stage.appendChild(h);
+  }
+
+  // ---- NO button dodges, YES grows ----
+  const noBtn = document.getElementById('yesBtn') ? document.getElementById('noBtn') : null;
+  const yesBtn = document.getElementById('yesBtn');
+  let dodgeCount = 0;
+  const maxDodges = 6;
+  let yesScale = 1;
+
+  function dodgeNo(){
+    dodgeCount++;
+
+    // Shrink NO a bit each time
+    const scale = Math.max(1 - dodgeCount * 0.13, 0.15);
+    document.getElementById('noBtn').style.transform =
+      `translate(${randomOffset()}px, ${randomOffset()}px) scale(${scale})`;
+
+    // Move NO to a random position within the stage
+    const stageRect = stage.getBoundingClientRect();
+    const btn = document.getElementById('noBtn');
+    const btnW = btn.offsetWidth || 120;
+    const btnH = btn.offsetHeight || 50;
+    const padding = 20;
+
+    const maxX = stageRect.width - btnW - padding;
+    const maxY = stageRect.height - btnH - padding;
+    const newX = padding + Math.random() * maxX;
+    const newY = padding + Math.random() * maxY;
+
+    btn.style.position = 'fixed';
+    btn.style.left = newX + 'px';
+    btn.style.top = newY + 'px';
+    btn.style.transform = `scale(${scale})`;
+
+    // Grow YES a little each dodge
+    yesScale = Math.min(1 + dodgeCount * 0.14, 2.4);
+    yesBtn.style.transform = `scale(${yesScale})`;
+
+    // After enough dodges, NO fades away entirely
+    if(dodgeCount >= maxDodges){
+      btn.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      btn.style.opacity = '0';
+      btn.style.pointerEvents = 'none';
+    }
+  }
+
+  function randomOffset(){
+    return Math.floor(Math.random()*40 - 20);
+  }
+
+  // ---- YES celebration ----
+  function sayYes(){
+    // little emoji burst before transitioning
+    for(let i=0;i<16;i++){
+      const b = document.createElement('div');
+      b.className = 'burst';
+      b.textContent = ['💛','💕','✨','🎉'][Math.floor(Math.random()*4)];
+      const rect = yesBtn.getBoundingClientRect();
+      b.style.left = rect.left + rect.width/2 + 'px';
+      b.style.top = rect.top + rect.height/2 + 'px';
+      const angle = Math.random()*Math.PI*2;
+      const dist = 100 + Math.random()*150;
+      b.style.setProperty('--bx', Math.cos(angle)*dist + 'px');
+      b.style.setProperty('--by', Math.sin(angle)*dist + 'px');
+      document.body.appendChild(b);
+      setTimeout(()=>b.remove(), 1400);
+    }
+
+    setTimeout(()=>{
+      document.getElementById('celebration').classList.add('show');
+      // When page 2 exists, replace the line below with:
+      // window.location.href = "page2.html";
+    }, 500);
+  }
+</script>
+
+</body>
+</html>
