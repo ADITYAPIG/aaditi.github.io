@@ -334,8 +334,9 @@
 
     setTimeout(()=>{
       document.getElementById('celebration').classList.add('show');
-      // When page 2 exists, replace the line above's timeout body with:
-      // window.location.href = "page2.html";
+      setTimeout(()=>{
+        window.location.href = "page2.html";
+      }, 1800);
     }, 500);
   }
 </script>

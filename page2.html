@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Mariya</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700;900&family=Quicksand:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --plum-deep: #241329;
+    --plum-mid: #3a1f42;
+    --pink-glow: #ff6f9c;
+    --pink-soft: #ffb3c6;
+    --gold: #ffc857;
+    --cream: #fff3e8;
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; }
+
+  html, body{
+    width: 100%;
+    background: radial-gradient(circle at 50% 0%, var(--plum-mid) 0%, var(--plum-deep) 65%);
+    font-family: 'Quicksand', sans-serif;
+    overflow-x: hidden;
+  }
+
+  .stage{
+    position: relative;
+    width: 100vw;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  /* confetti */
+  .confetti{
+    position: fixed;
+    top: -5vh;
+    font-size: 1.4rem;
+    animation: fall linear infinite;
+    opacity: 0.85;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  @keyframes fall{
+    0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+    10%  { opacity: 0.9; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0.2; }
+  }
+
+  .photo{
+    position: absolute;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 18px 45px rgba(0,0,0,0.55);
+    border: 4px solid var(--cream);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    z-index: 2;
+  }
+
+  .photo img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .photo:hover{
+    transform: scale(1.04) rotate(0deg) !important;
+    box-shadow: 0 22px 55px rgba(255, 111, 156, 0.5);
+    z-index: 10;
+  }
+
+  #p1{
+    top: 6vh;
+    left: -6vw;
+    width: 46vw;
+    height: 62vh;
+    transform: rotate(-6deg);
+  }
+
+  #p2{
+    top: 4vh;
+    right: -5vw;
+    width: 38vw;
+    height: 42vh;
+    transform: rotate(7deg);
+  }
+
+  #p3{
+    bottom: 4vh;
+    right: 6vw;
+    width: 34vw;
+    height: 46vh;
+    transform: rotate(-4deg);
+  }
+
+  .center-card{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 6;
+    text-align: center;
+    background: rgba(36, 19, 41, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    padding: 2.2rem 2.8rem;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 200, 87, 0.3);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    max-width: 90vw;
+  }
+
+  .heading{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.9rem, 6.5vw, 4rem);
+    line-height: 1.15;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: linear-gradient(90deg, var(--gold), var(--pink-glow), var(--pink-soft));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 40px rgba(255, 111, 156, 0.35);
+    margin-bottom: 0.6rem;
+  }
+
+  .subheading{
+    color: var(--cream);
+    opacity: 0.9;
+    font-weight: 600;
+    font-size: clamp(0.85rem, 2.2vw, 1.1rem);
+    letter-spacing: 0.5px;
+  }
+
+  .heart-icon{
+    display: inline-block;
+    animation: beat 1.2s ease-in-out infinite;
+  }
+
+  @keyframes beat{
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+  }
+
+  /* Mobile: stack collage vertically instead of overlapping oddly */
+  @media (max-width: 760px){
+    .stage{ min-height: 145vh; }
+
+    #p1{
+      position: absolute;
+      top: 3vh;
+      left: 50%;
+      transform: translate(-50%, 0) rotate(-4deg);
+      width: 78vw;
+      height: 34vh;
+    }
+    #p2{
+      top: 34vh;
+      right: -4vw;
+      left: auto;
+      width: 58vw;
+      height: 28vh;
+      transform: rotate(6deg);
+    }
+    #p3{
+      top: 60vh;
+      left: -4vw;
+      right: auto;
+      bottom: auto;
+      width: 60vw;
+      height: 30vh;
+      transform: rotate(-5deg);
+    }
+    .center-card{
+      top: auto;
+      bottom: 4vh;
+      transform: translate(-50%, 0);
+      padding: 1.6rem 1.8rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .confetti{ animation: none; opacity: 0; }
+    .heart-icon{ animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="photo" id="p1"><img src="images/photo1.png" alt="Mariya smiling"></div>
+  <div class="photo" id="p2"><img src="images/photo2.png" alt="Mariya candid moment"></div>
+  <div class="photo" id="p3"><img src="images/photo3.png" alt="Mariya on the street"></div>
+
+  <div class="center-card">
+    <h1 class="heading">Happy Birthday<br>Mariya</h1>
+    <p class="subheading">Another year of you being effortlessly amazing <span class="heart-icon">💛</span></p>
+  </div>
+</div>
+
+<script>
+  const symbols = ['🎉','🎈','✨','💛','🎊','💕'];
+  for(let i=0;i<24;i++){
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.textContent = symbols[Math.floor(Math.random()*symbols.length)];
+    c.style.left = Math.random()*100 + 'vw';
+    c.style.animationDuration = (6 + Math.random()*8) + 's';
+    c.style.animationDelay = (Math.random()*8) + 's';
+    c.style.fontSize = (16 + Math.random()*14) + 'px';
+    document.body.appendChild(c);
+  }
+</script>
+
+</body>
+</html>
